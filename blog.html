@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMIT VPN - Blog</title>
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon/android-chrome-512x512.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@rive-app/canvas@2.7.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        html {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
+        @font-face {
+            font-family: 'CustomRu';
+            src: url('fonts/DaysOne-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomRu', sans-serif;
+            background-color: #111111;
+            color: #EADDB9;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        body.ru {
+            font-family: 'CustomRu', 'Poppins', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(234, 221, 185, 0.1) 0%, rgba(17, 17, 17, 0) 50%);
+        }
+        
+        .card-hover {
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(234, 221, 185, 0.1);
+            z-index: 10;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 1.2s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .telegram-btn {
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .telegram-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 136, 204, 0.3);
+        }
+        
+        /* Анимированное подчёркивание для навигации */
+        [data-animated-underline="true"] {
+          position: relative;
+          overflow: hidden;
+        }
+        [data-animated-underline="true"]::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0.15em;
+          width: 100%;
+          height: 2px;
+          background: #9AE19D;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s cubic-bezier(.4,2,.6,1);
+        }
+        [data-animated-underline="true"]:hover::after,
+        [data-animated-underline="true"].active::after {
+          transform: scaleX(1);
+        }
+        
+        /* Анимации появления блоков */
+        .animate-fade-in {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .animate-fade-in.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .animate-card {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .animate-card.visible {
+          opacity: 1;
+          transform: translateY(0) rotateX(0);
+        }
+        
+        /* Задержки для последовательного появления */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+        .delay-600 { transition-delay: 0.6s; }
+        
+        /* Анимация для навигации */
+        .nav-animate {
+          opacity: 0;
+          transform: translateY(-30px);
+          animation: slideDown 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards paused;
+        }
+        
+        @keyframes slideDown {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Скрытие навигации до перевода */
+        .nav-content-hidden {
+          opacity: 0;
+          visibility: hidden;
+        }
+        
+        .nav-content-visible {
+          opacity: 1;
+          visibility: visible;
+          transition: opacity 0.3s ease;
+        }
+        
+        /* Анимация кнопки подписки */
+        .subscribe-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            z-index: 5;
+        }
+        
+        .subscribe-btn.success {
+            background-color: #9AE19D !important;
+            color: #111 !important;
+            transform: scale(1.05);
+        }
+        
+        .subscribe-btn .success-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .subscribe-btn.success .success-icon {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .subscribe-btn.success .btn-text {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        /* Скрытие контента до перевода */
+        .content-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .content-visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Бесшовные переходы между секциями */
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(234, 221, 185, 0.1) 0%, rgba(17, 17, 17, 0) 50%);
+            position: relative;
+        }
+        
+        /* Улучшенные градиентные переходы */
+        .bg-gradient-to-b {
+            background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+        }
+        
+        .bg-gradient-to-t {
+            background-image: linear-gradient(to top, var(--tw-gradient-stops));
+        }
+        
+        /* Плавные переходы для всех секций */
+        section, footer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Дополнительная маска для устранения артефактов */
+        section::before,
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Улучшенные анимации для карточек */
+        .animate-card {
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .animate-card.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+        
+        .animate-card.visible.card-hover:hover {
+            transform: translateY(-5px) rotateX(0);
+            z-index: 10;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Анимации для fade-in элементов */
+        .animate-fade-in {
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .animate-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .animate-fade-in.visible.card-hover:hover {
+            transform: translateY(-5px);
+            z-index: 10;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Кастомный брейкпоинт для навигации */
+        @media (max-width: 975px) {
+            .nav-desktop {
+                display: none !important;
+            }
+            .nav-mobile-button {
+                display: block !important;
+            }
+        }
+        
+        /* Стили для Rive анимации */
+        .rive-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rive-animation {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .rive-hero {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        
+        .rive-card {
+            width: 100%;
+            height: 200px;
+        }
+        
+        @media (min-width: 976px) {
+            .nav-desktop {
+                display: block !important;
+            }
+            .nav-mobile-button {
+                display: none !important;
+            }
+        }
+        
+        /* ... существующие стили ... */
+        .menu-collapse {
+            opacity: 0;
+            transform: scale(0.8) translateY(-30px);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        .menu-expand {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            transition: all 0.4s cubic-bezier(.4,2,.6,1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-[#111] z-50 shadow-lg nav-animate" style="max-width: 100vw; overflow-x: hidden;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="max-width: 100vw; overflow-x: hidden;">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="cursor-pointer flex items-center justify-center">
+                        <h1 class="text-2xl font-bold text-[#EADDB9] hover:text-[#9AE19D] transition duration-300 text-center">SHMIT<span class="text-[#9AE19D]">VPN</span></h1>
+                    </a>
+                </div>
+                
+                <div class="nav-desktop nav-content-hidden">
+                    <div class="flex space-x-8">
+                        <a href="index.html#features" data-animated-underline="true" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300">Features</a>
+                        <a href="index.html#pricing" data-animated-underline="true" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300">Pricing</a>
+                        <a href="index.html#locations" data-animated-underline="true" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300">Locations</a>
+                        <a href="index.html#faq" data-animated-underline="true" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300">FAQ</a>
+                        <a href="blog.html" data-animated-underline="true" class="text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300 active">Blog</a>
+                    </div>
+                </div>
+                
+                <div class="nav-desktop nav-content-hidden">
+                    <a href="https://t.me/SHMIT_VPN_BOT" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-bold rounded-full text-[#111] bg-[#EADDB9] hover:bg-[#9AE19D] hover:text-white transition duration-300 shadow-lg mr-4">
+                        <span data-i18n="nav.getStarted">Get Started</span>
+                    </a>
+                    <button id="lang-switcher" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-lg font-medium transition duration-300 overflow-hidden relative border-none">
+                        <span class="lang-slot" id="lang-switcher-label">RU</span>
+                    </button>
+                </div>
+                
+                <div class="nav-mobile-button">
+                    <button id="mobile-menu-button" class="text-[#EADDB9] hover:text-[#9AE19D] focus:outline-none">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden bg-[#181818] pb-4" style="max-width: 100vw; overflow-x: hidden;">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html#features" data-animated-underline="true" class="block px-3 py-2 rounded-md text-base font-medium text-[#EADDB9] hover:text-[#9AE19D]">Features</a>
+                <a href="index.html#pricing" data-animated-underline="true" class="block px-3 py-2 rounded-md text-base font-medium text-[#EADDB9] hover:text-[#9AE19D]">Pricing</a>
+                <a href="index.html#locations" data-animated-underline="true" class="block px-3 py-2 rounded-md text-base font-medium text-[#EADDB9] hover:text-[#9AE19D]">Locations</a>
+                <a href="index.html#faq" data-animated-underline="true" class="block px-3 py-2 rounded-md text-base font-medium text-[#EADDB9] hover:text-[#9AE19D]">FAQ</a>
+                <a href="blog.html" data-animated-underline="true" class="block px-3 py-2 rounded-md text-base font-medium text-[#9AE19D] active">Blog</a>
+                <div class="flex items-center gap-2">
+                    <a href="https://t.me/SHMIT_VPN_BOT" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-bold rounded-full text-[#111] bg-[#EADDB9] hover:bg-[#9AE19D] hover:text-white transition duration-300 shadow-lg">
+                        <span data-i18n="nav.getStarted">Get Started</span>
+                    </a>
+                    <button id="lang-switcher-mobile" class="text-[#EADDB9] hover:text-[#9AE19D] px-3 py-2 rounded-md text-base font-medium transition duration-300 overflow-hidden relative border-none">
+                        <span class="lang-slot" id="lang-switcher-label-mobile">RU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Header -->
+    <section class="hero-gradient pt-32 pb-6 px-6 md:px-12 lg:px-24 content-hidden relative">
+        <!-- Градиентный переход снизу -->
+        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#111] to-transparent pointer-events-none" style="z-index: 1;"></div>
+        <div class="max-w-7xl mx-auto text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in">Наш <span class="text-[#9AE19D]">Блог</span></h1>
+            <p class="text-xl md:text-2xl mb-10 text-[#EADDB9]/90 animate-fade-in">Актуальные новости о приватности, безопасности и обновлениях SHMIT VPN</p>
+            
+            <!-- Пример Rive анимации в hero секции (раскомментируйте и настройте) -->
+            <!--
+            <div class="rive-hero mt-8">
+                <canvas id="hero-animation" class="rive-animation"></canvas>
+            </div>
+            -->
+        </div>
+    </section>
+
+    <!-- Blog Articles -->
+    <section class="py-4 px-6 md:px-12 lg:px-24 bg-[#111] content-hidden relative">
+        <!-- Градиентный переход сверху -->
+        <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#111111] to-[#111] pointer-events-none" style="z-index: 1;"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid md:grid-cols-3 gap-8 mt-2">
+                <!-- Article 1 -->
+                <div class="card-hover bg-[#222] rounded-xl overflow-hidden flex flex-col animate-card delay-100">
+                    <video src="./LOG/downloaded-file (4).mp4" autoplay muted loop playsinline class="w-full h-48 object-cover">
+                        <source src="./LOG/downloaded-file (4).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-xs text-[#9AE19D] mb-2">SECURITY TIPS • MAY 15, 2025</div>
+                        <h3 class="text-xl font-bold mb-3">10 Ways to Protect Your Online Privacy in 2025</h3>
+                        <p class="text-[#EADDB9]/80 mb-4 flex-grow">Practical steps everyone should take to safeguard their personal data against modern threats.</p>
+                        <a href="#" class="text-[#9AE19D] hover:underline flex items-center mt-auto">Read More <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="card-hover bg-[#222] rounded-xl overflow-hidden flex flex-col animate-card delay-200">
+                    <video src="./LOG/downloaded-file (1).mp4" autoplay muted loop playsinline class="w-full h-48 object-cover">
+                        <source src="./LOG/downloaded-file (1).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-xs text-[#9AE19D] mb-2">VPN GUIDE • JUNE 2, 2025</div>
+                        <h3 class="text-xl font-bold mb-3">How to Access Geo-Restricted Content Safely</h3>
+                        <p class="text-[#EADDB9]/80 mb-4 flex-grow">Learn the correct way to bypass regional restrictions without compromising your security.</p>
+                        <a href="#" class="text-[#9AE19D] hover:underline flex items-center mt-auto">Read More <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Article 3 -->
+                <div class="card-hover bg-[#222] rounded-xl overflow-hidden flex flex-col animate-card delay-300">
+                    <video src="./LOG/downloaded-file (3).mp4" autoplay muted loop playsinline class="w-full h-48 object-cover">
+                        <source src="./LOG/downloaded-file (3).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-xs text-[#9AE19D] mb-2">COMPANY NEWS • JUNE 10, 2025</div>
+                        <h3 class="text-xl font-bold mb-3">New Server Locations Added in Asia-Pacific</h3>
+                        <p class="text-[#EADDB9]/80 mb-4 flex-grow">We've expanded our network with new servers in Singapore, Japan and Australia.</p>
+                        <a href="#" class="text-[#9AE19D] hover:underline flex items-center mt-auto">Read More <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Featured Articles -->
+            <div class="mt-8">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center animate-fade-in">Популярные статьи</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Featured Article 1 -->
+                    <div class="card-hover bg-[#222] rounded-xl overflow-hidden flex flex-col animate-card delay-400">
+                        <img src="/LOG/blog12.jpg" alt="Featured Article" class="w-full h-64 object-cover">
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-sm text-[#9AE19D] mb-3">PRIVACY LAWS • DECEMBER 15, 2025</div>
+                            <h3 class="text-2xl font-bold mb-4">Новые законы о приватности: что нужно знать</h3>
+                            <p class="text-[#EADDB9]/80 mb-6 flex-grow">Недавние изменения в законодательстве о приватности влияют на то, как мы защищаем ваши данные. Узнайте, что нового и как SHMIT VPN обеспечивает соответствие требованиям.</p>
+                            <a href="#" class="text-[#9AE19D] hover:underline flex items-center">Читать полностью <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                    
+                    <!-- Featured Article 2 -->
+                    <div class="card-hover bg-[#222] rounded-xl overflow-hidden flex flex-col animate-card delay-500">
+                        <img src="/LOG/blog0.jpg" alt="Featured Article" class="w-full h-64 object-cover">
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-sm text-[#9AE19D] mb-3">VPN GUIDE • DECEMBER 10, 2025</div>
+                            <h3 class="text-2xl font-bold mb-4">VPN vs Прокси: понимаем разницу</h3>
+                            <p class="text-[#EADDB9]/80 mb-6 flex-grow">Не все инструменты приватности одинаковы. Узнайте, почему VPN обеспечивает превосходную защиту по сравнению с прокси-серверами.</p>
+                            <a href="#" class="text-[#9AE19D] hover:underline flex items-center">Читать полностью <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Latest Article -->
+            <div class="mt-8">
+                <div class="card-hover bg-[#222] rounded-xl overflow-hidden animate-card delay-600">
+                    <div class="md:flex">
+                        <div class="md:w-1/2">
+                            <video src="./LOG/tab.mp4" autoplay muted loop playsinline class="w-full h-64 md:h-full object-cover">
+                                <source src="./LOG/tab.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="md:w-1/2 p-8 flex flex-col justify-center">
+                                <div class="text-sm text-[#9AE19D] mb-3">STREAMING GUIDE • DECEMBER 5, 2025</div>
+                            <h3 class="text-3xl font-bold mb-4">Безопасный стриминг: как получить доступ к глобальному контенту</h3>
+                            <p class="text-[#EADDB9]/80 mb-6">Узнайте, как безопасно получить доступ к любимому контенту из любой точки мира, сохраняя приватность и безопасность.</p>
+                            <a href="#" class="text-[#9AE19D] hover:underline flex items-center">Читать полностью <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 px-6 md:px-12 lg:px-24 bg-[#181818] content-hidden relative">
+        <!-- Градиентный переход сверху -->
+        <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#111] to-[#181818] pointer-events-none" style="z-index: 1;"></div>
+        <!-- Градиентный переход снизу -->
+        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0a0a0a] to-[#181818] pointer-events-none" style="z-index: 1;"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 animate-fade-in">Подпишитесь на обновления</h2>
+            <p class="text-xl text-[#EADDB9]/80 mb-8 animate-fade-in">Получайте последние новости о безопасности и приватности прямо на почту</p>
+            <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto animate-fade-in">
+                <input type="email" placeholder="Ваш email" class="flex-1 px-6 py-4 bg-[#222] border border-[#333] rounded-lg text-[#EADDB9] focus:outline-none focus:border-[#9AE19D]">
+                <button class="px-8 py-4 bg-[#9AE19D] text-[#111] rounded-lg font-semibold hover:bg-[#8AD18C] transition duration-300">Подписаться</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0a0a0a] py-12 px-6 md:px-12 lg:px-24 content-hidden relative">
+        <!-- Градиентный переход сверху -->
+        <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#181818] to-[#0a0a0a] pointer-events-none" style="z-index: 1;"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid md:grid-cols-4 gap-10 animate-fade-in">
+                <div class="col-span-1">
+                    <h2 id="footer-title" class="text-2xl font-bold mb-6">SHMIT<span class="text-[#9AE19D]">VPN</span></h2>
+                    <p id="footer-desc" class="text-[#EADDB9]/70 mb-4">Secure your internet connection with military-grade encryption and global server access.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://t.me/SHMIT_VPN_BOT" class="text-[#EADDB9] hover:text-[#9AE19D]"><i class="fab fa-telegram text-xl"></i></a>
+                        <a href="#" class="text-[#EADDB9] hover:text-[#9AE19D]"><i class="fab fa-vk text-xl"></i></a>
+                        <a href="#" class="text-[#EADDB9] hover:text-[#9AE19D]"><i class="fab fa-github text-xl"></i></a>
+                    </div>
+                </div>
+                <div class="col-span-1">
+                    <h3 id="footer-products-title" class="text-lg font-bold mb-4">Products</h3>
+                    <ul class="space-y-2">
+                        <li><a id="footer-win" href="https://apps.microsoft.com/detail/9pdfnl3qv2s5?hl=ru-RU&gl=FI" class="text-[#EADDB9]/70 hover:text-[#9AE19D]">VPN for Windows</a></li>
+                        <li><a id="footer-mac" href="https://apps.apple.com/ru/app/v2raytun/id6476628951" class="text-[#EADDB9]/70 hover:text-[#9AE19D]">VPN for Mac</a></li>
+                        <li><a id="footer-ios" href="https://apps.apple.com/ru/app/v2raytun/id6476628951https://apps.apple.com/ru/app/v2raytun/id6476628951" class="text-[#EADDB9]/70 hover:text-[#9AE19D]">VPN for iOS</a></li>
+                        <li><a id="footer-android" href="https://play.google.com/store/apps/details?id=com.v2raytun.android&hl=ru&gl=US&pli=1" class="text-[#EADDB9]/70 hover:text-[#9AE19D]">VPN for Android</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-1">
+                    <h3 id="footer-company-title" class="text-lg font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a id="footer-about" href="#about" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">About Us</a></li>
+                        <li><a id="footer-careers" href="#careers" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">Careers</a></li>
+                        <li><a id="footer-press" href="#press" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">Press</a></li>
+                        <li><a id="footer-blog" href="blog.html" class="text-[#9AE19D] hover:text-[#8AD18C] transition duration-300">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-1">
+                    <h3 id="footer-legal-title" class="text-lg font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a id="footer-privacy" href="#privacy" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">Privacy Policy</a></li>
+                        <li><a id="footer-terms" href="#terms" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">Terms of Service</a></li>
+                        <li><a id="footer-refund" href="#refund" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">Refund Policy</a></li>
+                        <li><a id="footer-dmca" href="#dmca" class="text-[#EADDB9]/70 hover:text-[#9AE19D] transition duration-300">DMCA Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-[#333] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center animate-fade-in">
+                <p id="footer-copyright" class="text-[#EADDB9]/50 mb-4 md:mb-0">© 2025  SHMIT VPN. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a id="footer-lang-en" href="#" class="text-[#EADDB9]/50 hover:text-[#9AE19D] text-sm"></a>
+                    <a id="footer-lang-ru" href="#" class="text-[#EADDB9]/50 hover:text-[#9AE19D] text-sm"></a>
+                    <a id="footer-lang-zh" href="#" class="text-[#EADDB9]/50 hover:text-[#9AE19D] text-sm">English</a>
+                    <a id="footer-lang-jp" href="#" class="text-[#EADDB9]/50 hover:text-[#9AE19D] text-sm">Русский</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Переводы для блога
+        const blogTranslations = {
+            en: {
+                nav: {
+                    features: "Features",
+                    pricing: "Pricing",
+                    locations: "Locations",
+                    faq: "FAQ",
+                    blog: "Blog",
+                    getStarted: "Get Started"
+                },
+                hero: {
+                    title: "Our <span class=\"text-[#9AE19D]\">Blog</span>",
+                    subtitle: "Latest news about privacy, security and SHMIT VPN updates"
+                },
+                articles: {
+                    article1: {
+                        category: "SECURITY TIPS • MAY 15, 2025",
+                        title: "10 Ways to Protect Your Online Privacy in 2025",
+                        desc: "Practical steps everyone should take to safeguard their personal data against modern threats.",
+                        readMore: "Read More"
+                    },
+                    article2: {
+                        category: "VPN GUIDE • JUNE 2, 2025",
+                        title: "How to Access Geo-Restricted Content Safely",
+                        desc: "Learn the correct way to bypass regional restrictions without compromising your security.",
+                        readMore: "Read More"
+                    },
+                    article3: {
+                        category: "COMPANY NEWS • JUNE 10, 2025",
+                        title: "New Server Locations Added in Asia-Pacific",
+                        desc: "We've expanded our network with new servers in Singapore, Japan and Australia.",
+                        readMore: "Read More"
+                    }
+                },
+                featured: {
+                    title: "Popular Articles",
+                    article1: {
+                        category: "PRIVACY LAWS • DECEMBER 15, 2025",
+                        title: "New Privacy Laws: What You Need to Know",
+                        desc: "Recent changes in privacy regulations affect how we protect your data. Learn what's new and how SHMIT VPN keeps you compliant.",
+                        readMore: "Read More"
+                    },
+                    article2: {
+                        category: "VPN GUIDE • DECEMBER 10, 2025",
+                        title: "VPN vs Proxy: Understanding the Difference",
+                        desc: "Not all privacy tools are created equal. Discover why VPNs offer superior protection compared to proxy servers.",
+                        readMore: "Read More"
+                    }
+                },
+                latest: {
+                        category: "STREAMING GUIDE • DECEMBER 5, 2025",
+                    title: "Streaming Safely: How to Access Global Content",
+                    desc: "Learn how to safely access your favorite content from anywhere in the world while maintaining your privacy and security.",
+                    readMore: "Read More"
+                },
+                newsletter: {
+                    title: "Subscribe to Updates",
+                    subtitle: "Get the latest security and privacy news delivered to your inbox",
+                    placeholder: "Your email",
+                    button: "Subscribe"
+                },
+                footer: {
+                    desc: "Secure your internet connection with military-grade encryption and global server access.",
+                    products: "Products",
+                    win: "VPN for Windows",
+                    mac: "VPN for Mac",
+                    ios: "VPN for iOS",
+                    android: "VPN for Android",
+                    company: "Company",
+                    about: "About Us",
+                    careers: "Careers",
+                    press: "Press",
+                    blog: "Blog",
+                    legal: "Legal",
+                    privacy: "Privacy Policy",
+                    terms: "Terms of Service",
+                    refund: "Refund Policy",
+                    dmca: "DMCA Policy",
+                    copyright: "© 2025 SHMIT VPN. All rights reserved.",
+                    langEn: "",
+                    langRu: "",
+                    langZh: "English",
+                    langJp: "Русский"
+                }
+            },
+            ru: {
+                nav: {
+                    features: "Возможности",
+                    pricing: "Тарифы",
+                    locations: "Локации",
+                    faq: "Вопросы",
+                    blog: "Блог",
+                    getStarted: "Начать"
+                },
+                hero: {
+                    title: "Наш <span class=\"text-[#9AE19D]\">Блог</span>",
+                    subtitle: "Актуальные новости о приватности, безопасности и обновлениях SHMIT VPN"
+                },
+                articles: {
+                    article1: {
+                        category: "СОВЕТЫ ПО БЕЗОПАСНОСТИ • 15 МАЯ 2025",
+                        title: "10 способов защитить вашу приватность в интернете в 2025 году",
+                        desc: "Практические шаги, которые должен предпринять каждый для защиты личных данных от современных угроз.",
+                        readMore: "Читать далее"
+                    },
+                    article2: {
+                        category: "РУКОВОДСТВО ПО VPN • 2 ИЮНЯ 2025",
+                        title: "Как безопасно получить доступ к геоблокированному контенту",
+                        desc: "Узнайте правильный способ обхода региональных ограничений без компрометации безопасности.",
+                        readMore: "Читать далее"
+                    },
+                    article3: {
+                        category: "НОВОСТИ КОМПАНИИ • 10 ИЮНЯ 2025",
+                        title: "Добавлены новые серверы в Азиатско-Тихоокеанском регионе",
+                        desc: "Мы расширили нашу сеть новыми серверами в Сингапуре, Японии и Австралии.",
+                        readMore: "Читать далее"
+                    }
+                },
+                featured: {
+                    title: "Популярные статьи",
+                    article1: {
+                    category: "ЗАКОНЫ О ПРИВАТНОСТИ • 15 ДЕКАБРЯ 2025",
+                        title: "Новые законы о приватности: что нужно знать",
+                        desc: "Недавние изменения в законодательстве о приватности влияют на то, как мы защищаем ваши данные. Узнайте, что нового и как SHMIT VPN обеспечивает соответствие требованиям.",
+                        readMore: "Читать полностью"
+                    },
+                    article2: {
+                        category: "РУКОВОДСТВО ПО VPN • 10 ДЕКАБРЯ 2025",
+                        title: "VPN vs Прокси: понимаем разницу",
+                        desc: "Не все инструменты приватности одинаковы. Узнайте, почему VPN обеспечивает превосходную защиту по сравнению с прокси-серверами.",
+                        readMore: "Читать полностью"
+                    }
+                },
+                latest: {
+                    category: "РУКОВОДСТВО ПО СТРИМИНГУ • 5 ДЕКАБРЯ 2025",
+                    title: "Безопасный стриминг: как получить доступ к глобальному контенту",
+                    desc: "Узнайте, как безопасно получить доступ к любимому контенту из любой точки мира, сохраняя приватность и безопасность.",
+                    readMore: "Читать полностью"
+                },
+                newsletter: {
+                    title: "Подпишитесь на обновления",
+                    subtitle: "Получайте последние новости о безопасности и приватности прямо на почту",
+                    placeholder: "Ваш email",
+                    button: "Подписаться"
+                },
+                footer: {
+                    desc: "Защитите интернет с помощью военного шифрования и глобального доступа к серверам.",
+                    products: "Продукты",
+                    win: "VPN для Windows",
+                    mac: "VPN для Mac",
+                    ios: "VPN для iOS",
+                    android: "VPN для Android",
+                    company: "Компания",
+                    about: "О нас",
+                    careers: "Карьера",
+                    press: "Пресса",
+                    blog: "Блог",
+                    legal: "Правовая информация",
+                    privacy: "Политика конфиденциальности",
+                    terms: "Условия использования",
+                    refund: "Политика возврата",
+                    dmca: "Политика DMCA",
+                    copyright: "© 2025 SHMIT VPN. Все права защищены.",
+                    langEn: "",
+                    langRu: "",
+                    langZh: "English",
+                    langJp: "Русский"
+                }
+            }
+        };
+
+        // Анимация переключателя языка
+        function animateLangSwitcher(labelEl, newText) {
+            labelEl.classList.add('lang-slot-anim');
+            setTimeout(() => {
+                labelEl.textContent = newText;
+                labelEl.classList.remove('lang-slot-anim');
+            }, 250);
+        }
+        
+        // Функции для работы с Rive анимациями
+        let riveAnimations = {};
+        
+        // Загрузка Rive анимации
+        async function loadRiveAnimation(canvasId, riveFile, options = {}) {
+            try {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) {
+                    console.error(`Canvas with id "${canvasId}" not found`);
+                    return;
+                }
+                
+                const { rive } = window;
+                if (!rive) {
+                    console.error('Rive library not loaded');
+                    return;
+                }
+                
+                const riveInstance = new rive.Rive({
+                    src: riveFile,
+                    canvas: canvas,
+                    autoplay: options.autoplay !== false,
+                    stateMachines: options.stateMachines || [],
+                    onLoad: () => {
+                        console.log(`Rive animation loaded: ${canvasId}`);
+                        if (options.onLoad) options.onLoad(riveInstance);
+                    },
+                    onStateChange: (event) => {
+                        if (options.onStateChange) options.onStateChange(event);
+                    }
+                });
+                
+                riveAnimations[canvasId] = riveInstance;
+                return riveInstance;
+            } catch (error) {
+                console.error(`Error loading Rive animation ${canvasId}:`, error);
+            }
+        }
+        
+        // Воспроизведение анимации
+        function playRiveAnimation(canvasId, animationName = null) {
+            const animation = riveAnimations[canvasId];
+            if (animation) {
+                if (animationName) {
+                    animation.play(animationName);
+                } else {
+                    animation.play();
+                }
+            }
+        }
+        
+        // Остановка анимации
+        function pauseRiveAnimation(canvasId) {
+            const animation = riveAnimations[canvasId];
+            if (animation) {
+                animation.pause();
+            }
+        }
+        
+        // Переключение состояния
+        function triggerRiveState(canvasId, stateMachineName, inputName) {
+            const animation = riveAnimations[canvasId];
+            if (animation) {
+                const inputs = animation.stateMachineInputs(stateMachineName);
+                const input = inputs.find(i => i.name === inputName);
+                if (input) {
+                    input.value = true;
+                }
+            }
+        }
+
+        // Функция установки языка
+        function setBlogLanguage(lang) {
+            localStorage.setItem('lang', lang);
+            document.body.classList.toggle('ru', lang === 'ru');
+            
+            // Обновляем переключатели языка
+            const langLabel = document.getElementById('lang-switcher-label');
+            const langLabelMobile = document.getElementById('lang-switcher-label-mobile');
+            
+            if (langLabel) {
+                langLabel.textContent = lang === 'en' ? 'RU' : 'EN';
+            }
+            if (langLabelMobile) {
+                langLabelMobile.textContent = lang === 'en' ? 'RU' : 'EN';
+            }
+            
+            const t = blogTranslations[lang];
+            
+            // Навигация
+            document.querySelectorAll('a[href="index.html#features"]').forEach(el => el.innerHTML = t.nav.features);
+            document.querySelectorAll('a[href="index.html#pricing"]').forEach(el => el.innerHTML = t.nav.pricing);
+            document.querySelectorAll('a[href="index.html#locations"]').forEach(el => el.innerHTML = t.nav.locations);
+            document.querySelectorAll('a[href="index.html#faq"]').forEach(el => el.innerHTML = t.nav.faq);
+            document.querySelectorAll('a[href="blog.html"]').forEach(el => el.innerHTML = t.nav.blog);
+            document.querySelectorAll('[data-i18n="nav.getStarted"]').forEach(el => el.innerHTML = t.nav.getStarted);
+            
+            // Hero секция
+            const heroTitle = document.querySelector('.hero-gradient h1');
+            const heroSubtitle = document.querySelector('.hero-gradient p');
+            if (heroTitle) heroTitle.innerHTML = t.hero.title;
+            if (heroSubtitle) heroSubtitle.innerHTML = t.hero.subtitle;
+            
+            // Статьи
+            const articles = document.querySelectorAll('.grid.md\\:grid-cols-3 .card-hover');
+            articles.forEach((article, index) => {
+                const articleData = t.articles[`article${index + 1}`];
+                if (articleData) {
+                    const category = article.querySelector('.text-xs');
+                    const title = article.querySelector('h3');
+                    const desc = article.querySelector('p');
+                    const link = article.querySelector('a');
+                    
+                    if (category) category.innerHTML = articleData.category;
+                    if (title) title.innerHTML = articleData.title;
+                    if (desc) desc.innerHTML = articleData.desc;
+                    if (link) link.innerHTML = articleData.readMore + ' <i class="fas fa-arrow-right ml-2"></i>';
+                }
+            });
+            
+            // Популярные статьи
+            const featuredTitle = document.querySelector('.mt-20 h2');
+            if (featuredTitle) featuredTitle.innerHTML = t.featured.title;
+            
+            const featuredArticles = document.querySelectorAll('.grid.md\\:grid-cols-2 .card-hover');
+            featuredArticles.forEach((article, index) => {
+                const articleData = t.featured[`article${index + 1}`];
+                if (articleData) {
+                    const category = article.querySelector('.text-sm');
+                    const title = article.querySelector('h3');
+                    const desc = article.querySelector('p');
+                    const link = article.querySelector('a');
+                    
+                    if (category) category.innerHTML = articleData.category;
+                    if (title) title.innerHTML = articleData.title;
+                    if (desc) desc.innerHTML = articleData.desc;
+                    if (link) link.innerHTML = articleData.readMore + ' <i class="fas fa-arrow-right ml-2"></i>';
+                }
+            });
+            
+            // Последняя статья
+            const latestArticle = document.querySelector('.mt-20 .card-hover:not(.grid)');
+            if (latestArticle) {
+                const category = latestArticle.querySelector('.text-sm');
+                const title = latestArticle.querySelector('h3');
+                const desc = latestArticle.querySelector('p');
+                const link = latestArticle.querySelector('a');
+                
+                if (category) category.innerHTML = t.latest.category;
+                if (title) title.innerHTML = t.latest.title;
+                if (desc) desc.innerHTML = t.latest.desc;
+                if (link) link.innerHTML = t.latest.readMore + ' <i class="fas fa-arrow-right ml-2"></i>';
+            }
+            
+            // Newsletter
+            const newsletterTitle = document.querySelector('.bg-\\[\\#181818\\] h2');
+            const newsletterSubtitle = document.querySelector('.bg-\\[\\#181818\\] p');
+            const emailInput = document.querySelector('input[type="email"]');
+            const subscribeBtn = document.querySelector('.bg-\\[\\#181818\\] button');
+            
+            if (newsletterTitle) newsletterTitle.innerHTML = t.newsletter.title;
+            if (newsletterSubtitle) newsletterSubtitle.innerHTML = t.newsletter.subtitle;
+            if (emailInput) emailInput.placeholder = t.newsletter.placeholder;
+            if (subscribeBtn) subscribeBtn.innerHTML = t.newsletter.button;
+            
+            // Footer
+            const footerTitle = document.getElementById('footer-title');
+            const footerDesc = document.getElementById('footer-desc');
+            const footerProductsTitle = document.getElementById('footer-products-title');
+            const footerWin = document.getElementById('footer-win');
+            const footerMac = document.getElementById('footer-mac');
+            const footerIos = document.getElementById('footer-ios');
+            const footerAndroid = document.getElementById('footer-android');
+            const footerCompanyTitle = document.getElementById('footer-company-title');
+            const footerAbout = document.getElementById('footer-about');
+            const footerCareers = document.getElementById('footer-careers');
+            const footerPress = document.getElementById('footer-press');
+            const footerBlog = document.getElementById('footer-blog');
+            const footerLegalTitle = document.getElementById('footer-legal-title');
+            const footerPrivacy = document.getElementById('footer-privacy');
+            const footerTerms = document.getElementById('footer-terms');
+            const footerRefund = document.getElementById('footer-refund');
+            const footerDmca = document.getElementById('footer-dmca');
+            const footerCopyright = document.getElementById('footer-copyright');
+            const footerLangEn = document.getElementById('footer-lang-en');
+            const footerLangRu = document.getElementById('footer-lang-ru');
+            const footerLangZh = document.getElementById('footer-lang-zh');
+            const footerLangJp = document.getElementById('footer-lang-jp');
+            
+            if (footerTitle) footerTitle.innerHTML = 'SHMIT<span class="text-[#9AE19D]">VPN</span>';
+            if (footerDesc) footerDesc.innerHTML = t.footer.desc;
+            if (footerProductsTitle) footerProductsTitle.innerHTML = t.footer.products;
+            if (footerWin) footerWin.innerHTML = t.footer.win;
+            if (footerMac) footerMac.innerHTML = t.footer.mac;
+            if (footerIos) footerIos.innerHTML = t.footer.ios;
+            if (footerAndroid) footerAndroid.innerHTML = t.footer.android;
+            if (footerCompanyTitle) footerCompanyTitle.innerHTML = t.footer.company;
+            if (footerAbout) footerAbout.innerHTML = t.footer.about;
+            if (footerCareers) footerCareers.innerHTML = t.footer.careers;
+            if (footerPress) footerPress.innerHTML = t.footer.press;
+            if (footerBlog) footerBlog.innerHTML = t.footer.blog;
+            if (footerLegalTitle) footerLegalTitle.innerHTML = t.footer.legal;
+            if (footerPrivacy) footerPrivacy.innerHTML = t.footer.privacy;
+            if (footerTerms) footerTerms.innerHTML = t.footer.terms;
+            if (footerRefund) footerRefund.innerHTML = t.footer.refund;
+            if (footerDmca) footerDmca.innerHTML = t.footer.dmca;
+            if (footerCopyright) footerCopyright.innerHTML = t.footer.copyright;
+            if (footerLangEn) footerLangEn.innerHTML = t.footer.langEn;
+            if (footerLangRu) footerLangRu.innerHTML = t.footer.langRu;
+            if (footerLangZh) footerLangZh.innerHTML = t.footer.langZh;
+            if (footerLangJp) footerLangJp.innerHTML = t.footer.langJp;
+            
+            // Показываем контент после перевода
+            const contentElements = document.querySelectorAll('.content-hidden');
+            contentElements.forEach(el => {
+                el.classList.remove('content-hidden');
+                el.classList.add('content-visible');
+            });
+            
+            // Анимации будут запускаться автоматически через IntersectionObserver
+        }
+
+        // Анимация кнопки подписки
+        function animateSubscribeButton() {
+            const button = document.querySelector('.bg-\\[\\#181818\\] button');
+            if (!button) return;
+            
+            const buttonText = button.innerHTML;
+            
+            // Добавляем иконку галочки
+            button.innerHTML = `
+                <span class="btn-text">${buttonText}</span>
+                <i class="fas fa-check success-icon"></i>
+            `;
+            
+            // Добавляем класс для анимации
+            button.classList.add('subscribe-btn', 'success');
+            
+            // Через 2 секунды возвращаем исходное состояние
+            setTimeout(() => {
+                button.classList.remove('success');
+                button.innerHTML = buttonText;
+            }, 2000);
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    
+                    // Scroll to target
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 90,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Анимации при скролле
+        function initScrollAnimations() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -100px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Наблюдаем за всеми элементами с анимациями
+            const animatedElements = document.querySelectorAll('.animate-fade-in, .animate-card, .animate-slide-up, .animate-scale-up');
+            animatedElements.forEach(el => observer.observe(el));
+            
+            // Проверяем элементы, которые уже видимы при загрузке
+            setTimeout(() => {
+                animatedElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                    
+                    if (isVisible && !el.classList.contains('visible')) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 100);
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Устанавливаем язык из localStorage или по умолчанию русский
+            const savedLang = localStorage.getItem('lang') || 'ru';
+            setBlogLanguage(savedLang);
+            
+            // Инициализируем анимации
+            initScrollAnimations();
+            
+            // Запускаем анимацию навигации
+            const navAnimate = document.querySelector('.nav-animate');
+            if (navAnimate) {
+                navAnimate.style.animationPlayState = 'running';
+            }
+            
+            // Показываем навигацию с задержкой
+            setTimeout(() => {
+                const navElements = document.querySelectorAll('.nav-content-hidden');
+                navElements.forEach(el => {
+                    el.classList.remove('nav-content-hidden');
+                    el.classList.add('nav-content-visible');
+                });
+            }, 100);
+            
+            // Добавляем обработчик для кнопки подписки
+            const subscribeButton = document.querySelector('.bg-\\[\\#181818\\] button');
+            if (subscribeButton) {
+                subscribeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    animateSubscribeButton();
+                });
+            }
+            
+            // Добавляем обработчики для переключения языка в футере (только для ссылок языков)
+            const langLinks = document.querySelectorAll('#footer-lang-en, #footer-lang-ru, #footer-lang-zh, #footer-lang-jp');
+            langLinks.forEach((link) => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentLang = localStorage.getItem('lang') || 'ru';
+                    const newLang = currentLang === 'en' ? 'ru' : 'en';
+                    
+                    // Анимируем переключатель языка
+                    const langLabel = document.getElementById('lang-switcher-label');
+                    const langLabelMobile = document.getElementById('lang-switcher-label-mobile');
+                    
+                    if (langLabel) {
+                        animateLangSwitcher(langLabel, newLang === 'en' ? 'RU' : 'EN');
+                    }
+                    if (langLabelMobile) {
+                        animateLangSwitcher(langLabelMobile, newLang === 'en' ? 'RU' : 'EN');
+                    }
+                    
+                    setTimeout(() => setBlogLanguage(newLang), 250);
+                });
+            });
+            
+            // Добавляем обработчики для кнопок переключения языка в навигации
+            const langBtnDesktop = document.getElementById('lang-switcher');
+            const langBtnMobile = document.getElementById('lang-switcher-mobile');
+            
+            if (langBtnDesktop) {
+                langBtnDesktop.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('lang') || 'ru';
+                    const newLang = currentLang === 'en' ? 'ru' : 'en';
+                    const langLabel = document.getElementById('lang-switcher-label');
+                    
+                    if (langLabel) {
+                        animateLangSwitcher(langLabel, newLang === 'en' ? 'RU' : 'EN');
+                    }
+                    
+                    setTimeout(() => setBlogLanguage(newLang), 250);
+                });
+            }
+            
+            if (langBtnMobile) {
+                langBtnMobile.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('lang') || 'ru';
+                    const newLang = currentLang === 'en' ? 'ru' : 'en';
+                    const langLabel = document.getElementById('lang-switcher-label-mobile');
+                    
+                    if (langLabel) {
+                        animateLangSwitcher(langLabel, newLang === 'en' ? 'RU' : 'EN');
+                    }
+                    
+                    setTimeout(() => setBlogLanguage(newLang), 250);
+                });
+            }
+            
+
+            
+            // Анимации будут запускаться автоматически через IntersectionObserver
+            
+            // Инициализация Rive анимаций
+            initializeRiveAnimations();
+            
+            // Добавляем обработчики для навигационных ссылок в футере
+            const footerNavLinks = document.querySelectorAll('#footer-about, #footer-careers, #footer-press, #footer-privacy, #footer-terms, #footer-refund, #footer-dmca');
+            footerNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    
+                    // Показываем уведомление о том, что страница в разработке
+                    showPageUnderConstruction(href.substring(1));
+                });
+            });
+            
+            // Инициализация Rive анимаций
+            function initializeRiveAnimations() {
+                // Пример загрузки анимации (раскомментируйте и настройте под ваш .riv файл)
+                /*
+                loadRiveAnimation('hero-animation', 'animations/hero-animation.riv', {
+                    autoplay: true,
+                    onLoad: (riveInstance) => {
+                        console.log('Hero animation loaded successfully');
+                    }
+                });
+                
+                loadRiveAnimation('card-animation', 'animations/card-animation.riv', {
+                    autoplay: false,
+                    stateMachines: ['State Machine 1'],
+                    onLoad: (riveInstance) => {
+                        console.log('Card animation loaded successfully');
+                    }
+                });
+                */
+            }
+            
+            // Функция для показа уведомления о странице в разработке
+            function showPageUnderConstruction(pageName) {
+                // Создаем модальное окно
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-[#222] rounded-xl w-full max-w-md p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold text-[#EADDB9]">Страница в разработке</h3>
+                            <button class="text-[#EADDB9] hover:text-[#9AE19D] focus:outline-none" onclick="this.closest('.fixed').remove()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-[#EADDB9]/80 mb-6">Страница "${pageName}" находится в разработке и будет доступна в ближайшее время.</p>
+                        <button class="w-full py-3 bg-[#9AE19D] text-[#111] rounded-lg font-semibold hover:bg-[#8AD18C] transition duration-300" onclick="this.closest('.fixed').remove()">
+                            Понятно
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Закрытие по клику вне модального окна
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
